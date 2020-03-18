@@ -5,6 +5,7 @@ const routesOrders = require('./routes/orders');
 const routesShops = require('./routes/shops');
 // 引入自定义的 hapi-swagger 插件配置
 const pluginHapiSwagger = require('./plugins/hapi-swagger');
+const pluginHapiPagination = require('./plugins/hapi-pagination');
 
 const { env } = process;
 
@@ -13,12 +14,13 @@ const server = new Hapi.Server();
 server.connection({
     port: env.PORT,
     host: env.HOST,
-})
+});
 
 const init = async () => {
     await server.register([
         // 为系统使用 hapi-swagger
         ...pluginHapiSwagger,
+        pluginHapiPagination
     ]);
     server.route([
         // 创建一个简单的hello hapi接口

@@ -2,20 +2,38 @@ const Joi = require('joi');
 
 const GROUP_NAME = 'shops';
 
+const { paginationDefine } = require('../utils/router-help');
+
+// 引入models
+const models = require('../models');
+
 module.exports = [
     {
         method: 'GET',
         path: `/${GROUP_NAME}`,
-        handler: (request, reply) => {
-            reply();
+        handler: async (request, reply) => {
+            const {
+                rows: results,
+                count: totalCount
+            } = await models.shops.findAndCountAll(
+                {
+                    attributes: [
+                        'id',
+                        'name'
+                    ],
+                    limit: request.query.limit,
+                    offset: (request.query.page - 1) * request.query.limit
+                }
+            );
+            reply({results, totalCount});
         },
         config: {
             tags: ['api', GROUP_NAME],
+            auth: false,
             description: '获取店铺列表',
             validate: {
                 query: {
-                    limit: Joi.number().integer().min(1).default(10).description('每页的数目'),
-                    page: Joi.number().integer().min(1).default(1).description('页码数')
+                    ...paginationDefine
                 }
             }
         }
@@ -23,8 +41,22 @@ module.exports = [
     {
         method: 'GET',
         path: `/${GROUP_NAME}/{shopId}/goods`,
-        handler: (request, reply) => {
-            reply();
+        handler: async (request, reply) => {
+            const {
+                rows: results,
+                count: totalCount
+            } = await models.goods.findAndCountAll({
+                where: {
+                    shop_id: request.params.shopId
+                },
+                attributes: [
+                    'id',
+                    'name',
+                ],
+                limit: request.query.limit,
+                offset: (request.query.page - 1) * request.query.limit,
+            });
+            reply({ results, totalCount });
         },
         config: {
             tags: ['api', GROUP_NAME],
@@ -34,8 +66,7 @@ module.exports = [
                     shopId: Joi.string().required()
                 },
                 query: {
-                    limit: Joi.number().integer().min(1).default(10).description('每页的数目'),
-                    page: Joi.number().integer().min(1).default(1).description('页码数')
+                    ...paginationDefine
                 }
             }
         }

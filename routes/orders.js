@@ -16,13 +16,13 @@ module.exports = [
                 payload: {
                     goodsList: Joi.array().items(
                         Joi.object().keys({
-                            goods_id: Joi.number().interger(),
-                            count: Joi.number().interger()
+                            goods_id: Joi.number().integer(),
+                            count: Joi.number().integer()
                         })
                     )
                 },
                 headers: Joi.object({
-                    authorization: Joi.string.required()
+                    authorization: Joi.string().required()
                 }).unknown()
             }
         }
@@ -41,7 +41,7 @@ module.exports = [
                     orderId: Joi.string().required()
                 },
                 headers: Joi.object({
-                    authorization: Joi.string.required()
+                    authorization: Joi.string().required()
                 }).unknown()
             }
         }
