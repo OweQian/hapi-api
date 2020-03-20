@@ -8,7 +8,8 @@ module.exports = [
         },
         config: {
             tags: ['api', 'tests'],
-            description: '测试 hello hapi'
+            description: '测试 hello hapi',
+            auth: false
         }
     }
 ]

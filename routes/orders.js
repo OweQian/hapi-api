@@ -2,6 +2,8 @@ const Joi = require('joi');
 
 const GROUP_NAME = 'orders';
 
+const { jwtHeaderDefine } = require('../utils/router-help');
+
 module.exports = [
     {
         method: 'POST',
@@ -21,9 +23,7 @@ module.exports = [
                         })
                     )
                 },
-                headers: Joi.object({
-                    authorization: Joi.string().required()
-                }).unknown()
+                ...jwtHeaderDefine
             }
         }
     },
@@ -40,9 +40,7 @@ module.exports = [
                 params: {
                     orderId: Joi.string().required()
                 },
-                headers: Joi.object({
-                    authorization: Joi.string().required()
-                }).unknown()
+                ...jwtHeaderDefine
             }
         }
     },
